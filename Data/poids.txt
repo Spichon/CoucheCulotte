@@ -1,0 +1,3 @@
+Critere,Poids
+Performance,0.6
+Composition,0.4
