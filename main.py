@@ -53,7 +53,9 @@ for cle,valeur in electreTri.pessimistic_evaluation(list_product_electre, list_p
     
 print("Taux de mauvaise classification :",electreTri.compare_classification(list_product_electre, list_profiles, electreTri.pessimistic_evaluation, 0.75),"%")
 
-
+print()
+print()
+print()
 # QUESTION 9 - ELECTRE TRI CUISINES
 list_cuisine_electre = parseCSV.get_product_and_features_notations(pathCuisine, pathPoidsCuisine)
 list_profiles_cuisines = parseCSV.get_profiles(pathProfilesCuisines,pathPoidsCuisine)
