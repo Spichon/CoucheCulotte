@@ -105,11 +105,10 @@ def get_product_and_features_notations(pathProduct, pathPoids):
 
                     #Si le fichier source possède des caractéristiques à rajouter pour chaque produit
                     if(dict_features):
-
                         # On initialise la liste des features à rajouter au produit
                         list_features = []
                         for f in dict_features:
-                            #On créé la feature avec son nom, sa note et non poids(venant du dictionnaire de poids)
+                            #On créé la feature avec son nom, sa note et son poids(venant du dictionnaire de poids)
                             temp_poids=convertNotationToInt(row[f])
                             list_features.append(Feature.Feature(f, temp_poids, dict_poids[f]))
 
@@ -179,6 +178,7 @@ def get_profiles(pathProfiles,pathPoids):
 
             return list_profiles
         
+        
 def convertNotationToInt(poids):
     if poids=='++++':
         return 6
@@ -194,4 +194,4 @@ def convertNotationToInt(poids):
         return 1
     elif poids=="---":
         return 0
-    
+        
