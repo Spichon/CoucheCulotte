@@ -1,6 +1,17 @@
-from Projet.Model import Product, Feature
+from CoucheCulotte.Model import Product, Feature
 import csv
 
+def get_interval():
+    with open('./Data/interval.csv', 'r') as csvfile:
+        # On initialise ici nos csv readers
+        reader = csv.DictReader(csvfile)
+        dict_interval = {}
+        for p in reader:
+            ss_json = {}
+            ss_json["lb"] = p["lb"]
+            ss_json["ub"] = p["ub"]
+            dict_interval[p["Notation"]] = ss_json
+        return dict_interval
 
 def get_product_and_features(pathProduct, pathPoids):
 
@@ -53,7 +64,7 @@ def get_product_and_features(pathProduct, pathPoids):
                             list_features.append(Feature.Feature(f, row[f], dict_poids[f]))
 
                         #On rajoute ici les caractéristiques au produit
-                        product.add_feature(list_features)
+                        product.features = list_features[:]
 
                     #On rajoute le produit créé à la liste finale des produits créés
                     list_product.append(product)
