@@ -1,5 +1,6 @@
 from Services import parseCSV
 from Services import mathFunctions, electreTri, arbrePourClassement60
+from Model import Product
 
 NAPPIES_PATH = "./Data/couche.csv"
 NAPPIES_WEIGHT_PATH = "./Data/poids.csv"
@@ -194,16 +195,23 @@ def execution_electre(product_path, weight_path, profiles_path):
         print(cle, ": categorie C", valeur)
 
     print("\nTaux de mauvaise classification :", electreTri.compare_classification(product, profiles, affectation_type, _lambda),"%")
-    print("_"*100,"\n")
     
-def execution_decision_tree(product_path, weight_path):
-    product_list = parseCSV.get_product_and_features(product_path, weight_path)
-    print("--- Classement des produits avec un arbre de décision ---")
-    arbrePourClassement60.construst_and_print_decision_tree(product_list)
+    print("\n--- Arbre de décision des catégories du magazine ---")
+    arbrePourClassement60.construst_and_print_decision_tree(product)
+    
+    for cle,valeur in electreTri.affectation(product, profiles, affectation_type, _lambda):
+        for prod in product:
+            if cle==prod: prod.categorie=valeur
+            
+    print("\n--- Arbre de décision des catégories de la méthode ELECTRE TRI ---")
+    arbrePourClassement60.construst_and_print_decision_tree(product)
     print("_"*100,"\n")
 
 def menu():
     step=""
+    product=""
+    weight=""
+    profiles=""
     is_next_step_ok=False
     while is_next_step_ok != True:
         
@@ -241,7 +249,6 @@ def main():
         print("Choix d'analyse : ")
         print("   1) Test de validité par programmation linéaire")
         print("   2) Classification avec la méthode ELECTRE TRI")
-        print("   3) Classement avec un arbre de décision")
         print("\nRetour au choix des produits :  Taper 'retour'")
         print("Quitter :  Taper 'stop'")
         user_input = input("Quelle analyse voulez-vous effectuer ? Taper 1,2 ou une commande de navigation ci-dessus : ")
@@ -250,9 +257,8 @@ def main():
             execution_PL(product, weight)
         elif user_input == "2":
             execution_electre(product, weight, profiles)
-        elif user_input == "3":
-            execution_decision_tree(product, weight)
         elif user_input == "retour":
+            print("Retour au menu princiapl")
             (product, weight, profiles, step) = menu()
         elif user_input == "stop":
             step = "stop"

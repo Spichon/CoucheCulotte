@@ -70,11 +70,11 @@ def buildtree(rows,scoref=entropy):
     best_criteria=None
     best_sets=None
   
-    column_count=len(rows[0])-1       ### Commented below in Markdown Cell 
-    for col in range(0,column_count): ###
+    column_count=len(rows[0])-1
+    for col in range(0,column_count):
         # Generate the list of different values in this column
-        column_values={}                ###   
-        for row in rows:                ###   
+        column_values={}
+        for row in rows:
             column_values[row[col]]=1
             # Now try dividing the rows up for each value in this column
             for value in column_values.keys():
