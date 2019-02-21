@@ -16,16 +16,14 @@ def transform(category):
     if (category==4): return 'Bon'
     if (category==5): return 'Très bon'
     
-products = parseCSV.get_product_and_features("../Data/couche.csv", "../Data/poids.csv")
-my_data=[]
-for product in products:
-    row=[]
-    for feature in product.features:
-        row=row+[feature.notation]
-    row=row+[float(product.score), transform(int(product.classement))]
-    my_data.append(row)
-print(my_data)
-print()
+def construst_and_print_decision_tree(products):
+    my_data=[]
+    for product in products:
+        row=[]
+        for feature in product.features:
+            row=row+[feature.notation]
+        row=row+[float(product.score), transform(int(product.categorie))]
+        my_data.append(row)
 
 # Divides a set on a specific column. Can handle numeric or nominal values
 def divideset(rows,column,value):
@@ -33,7 +31,7 @@ def divideset(rows,column,value):
     # the first group (true) or the second group (false)
     split_function=None
     if isinstance(value,int) or isinstance(value,float):
-        if isinstance(row[column],str): split_function=lambda row: parseCSV.convertNotationToInt(row[column]) >= value
+        if isinstance(rows[0],str): split_function=lambda row: parseCSV.convertNotationToInt(row[column]) >= value
         else: split_function=lambda row:row[column] >= value
     else: split_function=lambda row:row[column]==value
    
@@ -41,8 +39,6 @@ def divideset(rows,column,value):
     set1=[row for row in rows if split_function(row)]
     set2=[row for row in rows if not split_function(row)]
     return (set1,set2)
-
-divideset(my_data,1,12.5)
 
 # Create counts of possible results (the last column of each row is the result)
 def uniquecounts(rows):
@@ -113,6 +109,13 @@ def printtree(tree,indent='  '):
         printtree(tree.tb,indent+'  ')
         print (indent+'F->', end="")
         printtree(tree.fb,indent+'  ')
-      
-# Function - printtree()
-printtree(buildtree(my_data))
+
+def construst_and_print_decision_tree(product_list):
+    my_data=[]
+    for product in product_list:
+        row=[]
+        for feature in product.features:
+            row=row+[feature.notation]
+        row=row+[float(product.score), transform(int(product.categorie))]
+        my_data.append(row)
+    printtree(buildtree(my_data))
