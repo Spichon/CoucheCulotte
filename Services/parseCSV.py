@@ -1,8 +1,9 @@
-from Model import Product, Feature
+from CoucheCulotte.Model import Product, Feature
 import csv
 
+# Récupère les bornes inférieurse et supérieures
 def get_interval():
-    with open('./Data/interval.csv', 'r') as csvfile:
+    with open('./Data//Conf/interval.csv', 'r') as csvfile:
         # On initialise ici nos csv readers
         reader = csv.DictReader(csvfile)
         dict_interval = {}
@@ -13,6 +14,7 @@ def get_interval():
             dict_interval[p["Notation"]] = ss_json
         return dict_interval
 
+# Remplace la notation en un entier
 def convertNotationToInt(poids):
     if poids == '++++':
         return 6
@@ -29,6 +31,7 @@ def convertNotationToInt(poids):
     elif poids == "---":
         return 0
 
+# Fonction parsant le csv et créant les entiés Products et features, es retournant au main.js
 def get_product_and_features(pathProduct, pathPoids, note="yes", numberNotation="no", profil="no"):
 
     try:

@@ -5,11 +5,10 @@
        - Vérifier cohérence des résultats (opt)
     - Coder page internet pour afficher les résultats / Les inclures dans le fichier excel de fanny (Voir Yoann)
     - Rédiger dossier réponse
-    - Revoir architecture des data (exemple data->produit->donnees|config|results), supprimer jeux données tests
-    - Commenter le code
     - Ecrire le read.me
 
 DONE :
-
+    - Commenter le code
+    - Revoir architecture des data (exemple data->produit->donnees|config|results), supprimer jeux données tests
     - Merge les 2 fonctions redondantes dans parseCSV (Merlou)
     - Voir pour rendre mieux l'exécution de l'arbre de décision et electre tri (Merlou)

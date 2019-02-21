@@ -1,9 +1,10 @@
 import numpy as np
 import scipy as sp
-from Services import parseCSV
+from CoucheCulotte.Services import parseCSV
 from optlang import Model, Variable, Constraint, Objective
 import json
 
+#Construction des Variables
 def build_variables(list_product, release_constraint):
     intervals = parseCSV.get_interval()
     variables = {}
@@ -27,6 +28,7 @@ def build_variables(list_product, release_constraint):
             variables[product.name][feature.name] = var
     return variables,results
 
+#Construction des contraintes
 def build_constraints_products(variables, results, list_product, release_constraint):
     constraints = []
     for product in list_product:
@@ -59,6 +61,7 @@ def build_constraints_products(variables, results, list_product, release_constra
                 constraints.append(const2)
     return constraints
 
+#Lancement du programme linéaire
 def CheckAdditiveModel(list_product,to_maximze=None,release_constraint=None):
     variables = build_variables(list_product, release_constraint)[0]
     results = build_variables(list_product, release_constraint)[1]

@@ -1,17 +1,26 @@
-from Services import parseCSV
-from Services import mathFunctions, electreTri, arbrePourClassement60
-from Model import Product
+from CoucheCulotte.Services import parseCSV
+from CoucheCulotte.Services import mathFunctions, electreTri, arbrePourClassement60
+from CoucheCulotte.Model import Product
 
-NAPPIES_PATH = "./Data/couche.csv"
-NAPPIES_WEIGHT_PATH = "./Data/poids.csv"
-NAPPIES_PROFILES_PATH = "./Data/profil.csv"
-ROBOTS_PATH = "./Data/cuisine.csv"
-ROBOTS_WEIGHT_PATH= "./Data/poidscuisine.csv"
-ROBOTS_PROFILES_PATH = "./Data/profilCuisines.csv"
 
+# Configuration des liens vers les fichiers de classements de produits, ainsi que la configuration des features et du poids
+# associé à chaque features
+NAPPIES_PATH = "./Data/Couche/Data/couche.csv"
+NAPPIES_WEIGHT_PATH = "./Data/Couche/Conf/poids.csv"
+NAPPIES_PROFILES_PATH = "./Data/Couche/Conf/profil.csv"
+ROBOTS_PATH = "./Data/Cuisine/Data/cuisine.csv"
+ROBOTS_WEIGHT_PATH= "./Data/Cuisine/Conf/poidscuisine.csv"
+ROBOTS_PROFILES_PATH = "./Data/Cuisine/Conf/profilCuisines.csv"
+
+# Cette variablee est utilisée dans le cadre de la programmation linéaire pour relacher des contraintes sur des produits (Par exemple
+# redefinir les bornes inférieures et supérieures d'une caractéristique d'un produit, ou par exemple ne pas utiliser la notion
+# de classement pour un produit donné).
 to_release = {}
+# Cette variable sert à choisir quel projet on souhaite optimiser, si on désire minimiser ou maximiser, et si c'est sa note finale
+# ou une de ses caractéristiques que l'on souhaite optimiser.
 to_maximise = {}
 
+# Affiche la liste des produits détaillée que l'on vient de parser
 def show_products_details(product_list):
     for product in product_list:
         print("-Produit : ", product)
@@ -23,10 +32,13 @@ def show_products_details(product_list):
         print("-Classement : ", product.classement)
         print("\n\n")
 
+# Affiche le nom des produit que l'on vient de parser
 def show_product_list(product_list):
     for product in product_list:
         print("-Produit : ", product)
 
+# Menu contextuel permettant d'intialiser les variables to_release et to_maximise, et d'apeller la fonction se chargeant d'exécuter
+# le programe linéaire.
 def execution_PL(product_path, weight_path):
     is_next_step_ok = False
     while is_next_step_ok != True:
@@ -45,12 +57,14 @@ def execution_PL(product_path, weight_path):
     if user_input == "Y" or user_input == "y":
         show_products_details(product_list)
     print(
-        "Nous nous apprêtons à vérifier si les notes des produits cités si-dessus sont explicables à l'aide d'une somme pondéré. Pour ce"
+        "Nous nous apprêtons à vérifier si les notes des produits cités si-dessus sont explicables à l'aide d'une somme pondéré. \nPour ce"
         " faire, nous utilisons un programme d'optimisation linéaire. Il s'agit d'un ensemble de variables (les notes des produits), "
         "soumisent à des contraintes ")
+    print("_" * 100, "\n")
     user_input = input("Voulez-vous relâcher des contraintes sur un produit en particulier ? Y/N : ")
     if user_input == "Y" or user_input == "y":
         while user_input != "stop":
+            print("_" * 100, "\n")
             user_input = input("Ecrire le nom du produit ou stop pour arrêter la user_input : ")
             is_next_step_ok = False
             for product in product_list:
@@ -61,16 +75,19 @@ def execution_PL(product_path, weight_path):
             if is_next_step_ok == True:
                 to_release[nomproduit] = {}
                 while user_input != "N" or user_input != "n":
+                    print("_" * 100, "\n")
                     user_input = input(
                         "Souhaitez-vous appliquer la notion de classement pour le produit " + nomproduit + " ? Y/N : ")
                     if user_input == "Y" or user_input == "y":
                         to_release[nomproduit]["classement"] = True
                     elif user_input == "N" or user_input == "n":
                         to_release[nomproduit]["classement"] = False
+                    print("_" * 100, "\n")
                     user_input = input(
                         "Souhaitez-vous modifier la borne inférieure ou supérieure d'un des critères du produit " + nomproduit + " ? Y/N : ")
                     if user_input == "Y" or user_input == "y":
                         while user_input != "stop":
+                            print("_" * 100, "\n")
                             user_input = input("Entrer le nom du critère à modifier ou stop pour terminer la user_input : ")
                             is_next_step_ok = False
                             for feature in features:
@@ -79,8 +96,10 @@ def execution_PL(product_path, weight_path):
                                     nomfeature = user_input
                             if is_next_step_ok == True:
                                 to_release[nomproduit][nomfeature] = {}
+                                print("_" * 100, "\n")
                                 user_input = input("Saisir la borne inférieure de " + nomproduit + "_" + nomfeature + " : ")
                                 to_release[nomproduit][nomfeature]["lb"] = user_input
+                                print("_" * 100, "\n")
                                 user_input = input("Saisir la borne supérieure de " + nomproduit + "_" + nomfeature + " : ")
                                 to_release[nomproduit][nomfeature]["ub"] = user_input
                     else:
@@ -154,6 +173,7 @@ def execution_PL(product_path, weight_path):
             print(var_name, "=", var.primal)
     print("_"*100,"\n")
 
+# Menu contextuel permettant d'executer electre tri
 def execution_electre(product_path, weight_path, profiles_path):
     
     print("--- Classification des produits avec la méthode ELECTRE TRI ---")
@@ -241,6 +261,7 @@ def menu():
             print("Erreur. Reformuler la requête.")
     return(product, weight, profiles, step)
 
+# Initialise quel produit on souhaite analyser et quelle anaylyse on souhaite opérer
 def main():
     (product, weight, profiles, step) = menu()
         
