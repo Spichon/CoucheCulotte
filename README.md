@@ -8,13 +8,16 @@ linéaire, ou la méthode Electre Tri.
 
 Ces instructions vont vous aider à récupérer le code et à l'éxécuter
 
-### Prérecquis
+### Pré-requis
 
 Pour exécuter ce projet, vous aurez besoin de Python 2.7 minimum, ainsi que le gestionnaire de package pip
 
+* [Installation Python](https://www.python.org/downloads/) 
+* [Installation Pip](https://pip.pypa.io/en/stable/installing/)
+
 ### Installation
 
-Récupérer le code source présent sur sur cet 
+Récupérez le code source présent sur cette 
 url : https://github.com/Spichon/CoucheCulotte 
 
 Placez-vous au niveau du dossier et exécuter la commande suivante
@@ -23,8 +26,8 @@ Placez-vous au niveau du dossier et exécuter la commande suivante
 pip install -r requirements.txt
 ```
 
-Ensuite, ouvrez le projet dans votre IDE favoris, et exécutez le fichier main.py.
-Des instructions vous seront demandés au fur et à mesure dans la console python permettant 
+Ensuite, ouvrez le projet dans votre IDE favori, et exécutez le fichier main.py.
+Des instructions vous seront demandées au fur et à mesure dans la console python permettant 
 de tester les produits du magazine 60 millions de consommateurs 
 
 ## Packages
@@ -47,10 +50,9 @@ de tester les produits du magazine 60 millions de consommateurs
 
 ## Auteurs
 
-
 * **Perrin Yoann** - *Developpeur*
 * **Lejeune Merlène** - *Developpeur*
-* **James Fanny** - *Developpeur*
+* **Jammes Fanny** - *Developpeur*
 * **Pichon Simon** - *Developpeur*
 
 ## License

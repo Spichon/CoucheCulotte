@@ -1,6 +1,6 @@
 import numpy as np
 import scipy as sp
-from CoucheCulotte.Services import parseCSV
+from Services import parseCSV
 from optlang import Model, Variable, Constraint, Objective
 import json
 

@@ -1,4 +1,4 @@
-from CoucheCulotte.Model import Product, Feature
+from Model import Product, Feature
 import csv
 
 # Récupère les bornes inférieurse et supérieures

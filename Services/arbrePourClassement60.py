@@ -1,5 +1,5 @@
 from math import log
-from CoucheCulotte.Services import parseCSV
+from Services import parseCSV
 
 class decisionnode:
     def __init__(self,col=-1,value=None,results=None,tb=None,fb=None): # __init__ methods can take any number of arguments, and just like functions, the arguments can be defined with default values, making them optional to the caller.

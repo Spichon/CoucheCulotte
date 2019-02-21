@@ -1,6 +1,6 @@
-from CoucheCulotte.Services import parseCSV
-from CoucheCulotte.Services import mathFunctions, electreTri, arbrePourClassement60
-from CoucheCulotte.Model import Product
+from Services import parseCSV
+from Services import mathFunctions, electreTri, arbrePourClassement60
+from Model import Product
 
 
 # Configuration des liens vers les fichiers de classements de produits, ainsi que la configuration des features et du poids
@@ -58,7 +58,7 @@ def execution_PL(product_path, weight_path):
         show_products_details(product_list)
     print(
         "Nous nous apprêtons à vérifier si les notes des produits cités si-dessus sont explicables à l'aide d'une somme pondéré. \nPour ce"
-        " faire, nous utilisons un programme d'optimisation linéaire. Il s'agit d'un ensemble de variables (les notes des produits), "
+        "faire, nous utilisons un programme d'optimisation linéaire. Il s'agit d'un ensemble de variables (les notes des produits), "
         "soumisent à des contraintes ")
     print("_" * 100, "\n")
     user_input = input("Voulez-vous relâcher des contraintes sur un produit en particulier ? Y/N : ")
