@@ -1,20 +1,18 @@
 from Services import parseCSV
-from Services import mathFunctions, electreTri
+from Services import mathFunctions, electreTri, arbrePourClassement60
 
-pathProduct = "./Data/couche.csv"
-pathPoids = "./Data/poids.csv"
-pathProfiles = "./Data/profil.csv"
-pathCuisine = "./Data/cuisine.csv"
-pathPoidsCuisine= "./Data/poidscuisine.csv"
-pathProfilesCuisines = "./Data/profilCuisines.csv"
+NAPPIES_PATH = "./Data/couche.csv"
+NAPPIES_WEIGHT_PATH = "./Data/poids.csv"
+NAPPIES_PROFILES_PATH = "./Data/profil.csv"
+ROBOTS_PATH = "./Data/cuisine.csv"
+ROBOTS_WEIGHT_PATH= "./Data/poidscuisine.csv"
+ROBOTS_PROFILES_PATH = "./Data/profilCuisines.csv"
 
-list_product = parseCSV.get_product_and_features(pathProduct, pathPoids, note="no")
 to_release = {}
 to_maximise = {}
 
-
-def afficher_detail_produit(list_product):
-    for product in list_product:
+def show_products_details(product_list):
+    for product in product_list:
         print("-Produit : ", product)
         print("-Features: ")
         for feature in product.features:
@@ -23,105 +21,112 @@ def afficher_detail_produit(list_product):
         print("-Categorie : ", product.categorie)
         print("-Classement : ", product.classement)
         print("\n\n")
-        print("\n\n")
 
-def afficher_list_produit(list_product):
-    for product in list_product:
+def show_product_list(product_list):
+    for product in product_list:
         print("-Produit : ", product)
 
-def execution_PL(list_product):
-    entree_valide = False
-    while entree_valide != True:
-        saisie = input("Voulez vous récupérer les produits avec leurs notes ? Y/N ")
-        if saisie == "Y" or saisie == "y":
-            entree_valide = True
-            list_product = parseCSV.get_product_and_features(pathProduct, pathPoids, note="yes")
-        if saisie == "N" or saisie == "n":
-            entree_valide = True
+def execution_PL(product_path, weight_path):
+    is_next_step_ok = False
+    while is_next_step_ok != True:
+        user_input = input("Voulez-vous récupérer les produits avec leurs notes ? Y/N ")
+        if user_input == "Y" or user_input == "y":
+            is_next_step_ok = True
+            product_list = parseCSV.get_product_and_features(product_path, weight_path, note="yes")
+        if user_input == "N" or user_input == "n":
+            is_next_step_ok = True
+            product_list = parseCSV.get_product_and_features(product_path, weight_path, note="no")
+            
     print("Voici la liste des produits disponibles :")
-    afficher_list_produit(list_product)
+    show_product_list(product_list)
     print("\n")
-    saisie = input("Voulez vous afficher les détails de chaque produit ? Y/N : ")
-    if saisie == "Y" or saisie == "y":
-        afficher_detail_produit(list_product)
+    user_input = input("Voulez-vous afficher les détails de chaque produit ? Y/N : ")
+    if user_input == "Y" or user_input == "y":
+        show_products_details(product_list)
     print(
         "Nous nous apprêtons à vérifier si les notes des produits cités si-dessus sont explicables à l'aide d'une somme pondéré. Pour ce"
         " faire, nous utilisons un programme d'optimisation linéaire. Il s'agit d'un ensemble de variables (les notes des produits), "
         "soumisent à des contraintes ")
-    saisie = input("Voulez vous relacher des contraintes sur un produit en particulier ? Y/N : ")
-    if saisie == "Y" or saisie == "y":
-        while saisie != "stop":
-            saisie = input("Ecrire le nom du produit ou stop pour arrêter la saisie: ")
-            entree_valide = False
-            for product in list_product:
-                if product.name == saisie:
-                    entree_valide = True
-                    nomproduit = saisie
+    user_input = input("Voulez-vous relâcher des contraintes sur un produit en particulier ? Y/N : ")
+    if user_input == "Y" or user_input == "y":
+        while user_input != "stop":
+            user_input = input("Ecrire le nom du produit ou stop pour arrêter la user_input : ")
+            is_next_step_ok = False
+            for product in product_list:
+                if product.name == user_input:
+                    is_next_step_ok = True
+                    nomproduit = user_input
                     features = product.features
-            if entree_valide == True:
+            if is_next_step_ok == True:
                 to_release[nomproduit] = {}
-                while saisie != "N" or saisie != "n":
-                    saisie = input(
-                        "Souhaitez vous appliquer la notion de classement pour le produit " + nomproduit + " Y/N : ")
-                    if saisie == "Y" or saisie == "y":
+                while user_input != "N" or user_input != "n":
+                    user_input = input(
+                        "Souhaitez-vous appliquer la notion de classement pour le produit " + nomproduit + " ? Y/N : ")
+                    if user_input == "Y" or user_input == "y":
                         to_release[nomproduit]["classement"] = True
-                    if saisie == "N" or saisie == "n":
+                    elif user_input == "N" or user_input == "n":
                         to_release[nomproduit]["classement"] = False
-                    saisie = input(
-                        "Souhaitez vous modifier la borne inférieure ou supérieure d'un des critère du produit " + nomproduit + " Y/N : ")
-                    if saisie == "Y" or saisie == "y":
-                        while saisie != "stop":
-                            saisie = input("Rentrer le nom du critère à modifier ou stop pour terminer la saisie :")
-                            entree_valide = False
+                    user_input = input(
+                        "Souhaitez-vous modifier la borne inférieure ou supérieure d'un des critères du produit " + nomproduit + " ? Y/N : ")
+                    if user_input == "Y" or user_input == "y":
+                        while user_input != "stop":
+                            user_input = input("Entrer le nom du critère à modifier ou stop pour terminer la user_input : ")
+                            is_next_step_ok = False
                             for feature in features:
-                                if feature.name == saisie:
-                                    entree_valide = True
-                                    nomfeature = saisie
-                            if entree_valide == True:
+                                if feature.name == user_input:
+                                    is_next_step_ok = True
+                                    nomfeature = user_input
+                            if is_next_step_ok == True:
                                 to_release[nomproduit][nomfeature] = {}
-                                saisie = input("Saisir la borne inférieure de " + nomproduit + "_" + nomfeature)
-                                to_release[nomproduit][nomfeature]["lb"] = saisie
-                                saisie = input("Saisir la borne supérieure de " + nomproduit + "_" + nomfeature)
-                                to_release[nomproduit][nomfeature]["ub"] = saisie
+                                user_input = input("Saisir la borne inférieure de " + nomproduit + "_" + nomfeature + " : ")
+                                to_release[nomproduit][nomfeature]["lb"] = user_input
+                                user_input = input("Saisir la borne supérieure de " + nomproduit + "_" + nomfeature + " : ")
+                                to_release[nomproduit][nomfeature]["ub"] = user_input
                     else:
                         break
+                
+    print("_"*100,"\n")
     print("Choix des critères d'optimisation")
 
-    entree_valide = False
+    is_next_step_ok = False
     nomproduit = "Joone"
-    while entree_valide != True:
-        saisie = input("Ecrire le nom du produit: ")
-        for product in list_product:
-            if product.name == saisie:
-                entree_valide = True
-                nomproduit = saisie
+    while is_next_step_ok != True:
+        user_input = input("Ecrire le nom du produit : ")
+        for product in product_list:
+            if product.name == user_input:
+                is_next_step_ok = True
+                nomproduit = user_input
                 features = product.features
-        if entree_valide == True:
+        if is_next_step_ok == True:
             to_maximise["product"] = nomproduit
 
-    entree_valide = False
-    while entree_valide != True:
-        saisie = input("Ecrire le type d'optimisation : min/max ")
-        if saisie == "min" or saisie == "max":
-            entree_valide = True
-            to_maximise["sens"] = saisie
+    print("_"*100,"\n")
+    
+    is_next_step_ok = False
+    while is_next_step_ok != True:
+        user_input = input("Ecrire le type d'optimisation : min/max ")
+        if user_input == "min" or user_input == "max":
+            is_next_step_ok = True
+            to_maximise["sens"] = user_input
 
-    entree_valide = False
-    while entree_valide != True:
-        saisie = input(
-            "Voulez-vous optimiser la note finale du produit " + nomproduit + " ou un de ses critères ? : result/criteria")
+    print("_"*100,"\n")
+
+    is_next_step_ok = False
+    while is_next_step_ok != True:
+        user_input = input(
+            "Voulez-vous optimiser la note finale du produit " + nomproduit + " ou un de ses critères ? : result/criteria ")
         to_maximise["result"] = False
-        if saisie == "result":
-            entree_valide = True
+        if user_input == "result":
+            is_next_step_ok = True
             to_maximise["result"] = True
-        if saisie == "criteria":
-            while entree_valide != True:
-                saisie = input("Rentrer le nom du critère à optimiser: ")
+        elif user_input == "criteria":
+            while is_next_step_ok != True:
+                user_input = input("Rentrer le nom du critère à optimiser: ")
                 for feature in features:
-                    if feature.name == saisie:
-                        entree_valide = True
-                        nomfeature = saisie
-                if entree_valide == True:
+                    if feature.name == user_input:
+                        is_next_step_ok = True
+                        nomfeature = user_input
+                if is_next_step_ok == True:
                     to_maximise["feature"] = nomfeature
 
     # Question 1
@@ -135,7 +140,7 @@ def execution_PL(list_product):
     #               Or elles repassent en dessous de 10 quand on minimise la pire note (Sauf Love & green)
     # Question 3.3 : Les notes sont relatives et sensible à l'ajustement des paramètres de la fonction d'optimisation.
     #               Des notes peuvent se trouver en dessous ou au dessus de la moyenne si on maximise ou minimise le "plus mauvais" produit
-    model_PL = mathFunctions.CheckAdditiveModel(list_product, to_maximze=to_maximise, release_constraint=to_release)
+    model_PL = mathFunctions.CheckAdditiveModel(product_list, to_maximze=to_maximise, release_constraint=to_release)
     if model_PL.status == "infeasible":
         print("\n")
         print("Le status du modèle est : ", model_PL.status)
@@ -146,96 +151,114 @@ def execution_PL(list_product):
         print("----------")
         for var_name, var in model_PL.variables.items():
             print(var_name, "=", var.primal)
+    print("_"*100,"\n")
 
-
-def execution_electre():
-    # ELECTRE TRI COUCHES CULOTTES
-    list_product_electre = parseCSV.get_product_and_features_notations(pathProduct, pathPoids)
-    list_profiles = parseCSV.get_profiles(pathProfiles,pathPoids)
-
-    print("QUESTION 6 - ELECTRE TRI - LAMBDA = 0.55")
-    print("   OPTIMISTE : ")
-    for cle,valeur in electreTri.optimistic_evaluation(list_product_electre, list_profiles,0.55):
+def execution_electre(product_path, weight_path, profiles_path):
+    
+    print("--- Classification des produits avec la méthode ELECTRE TRI ---")
+    product = parseCSV.get_product_and_features(product_path, weight_path, numberNotation="yes")
+    profiles = parseCSV.get_product_and_features(profiles_path, weight_path, numberNotation="yes", profil="yes")
+    affectation_type="optimistic"
+    _lambda=0.55
+    
+    is_next_step_ok = False
+    while is_next_step_ok != True:
+        user_input = input("Voulez-vous une affectation optimiste (1) ou pessimiste (2) des catégories ? 1/2 : ")
+        if user_input == "1":
+            affectation_type="optimistic"
+            is_next_step_ok = True
+        if user_input == "2":
+            affectation_type="pessimistic"
+            is_next_step_ok = True
+        else :
+            print("Erreur. Veuillez reformuler votre requête.")
+            
+    print("_"*100,"\n")
+    
+    is_next_step_ok = False
+    while is_next_step_ok != True:
+        print("Quelle est la valeur du lambda pour cette affectation ? Il est par défaut à 0.55.")
+        user_input = input("Indiquer un autre lambda (entre 0.00 et 1.00) ou taper entrée : ")
+        if user_input == "" :
+            is_next_step_ok = True
+        elif float(user_input) > 0 and float(user_input) <= 1 :
+            _lambda=float(user_input)
+            is_next_step_ok = True
+        else :
+            print("Erreur. Veuillez reformuler votre requête.")
+            
+    print("_"*100,"\n")
+    
+    print("ELECTRE TRI CLASSIFICATION - AFFECTATION "+affectation_type+" - LAMBDA = "+str(_lambda))
+    for cle,valeur in electreTri.affectation(product, profiles, affectation_type, _lambda):
         print(cle, ": categorie C", valeur)
 
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_product_electre, list_profiles, electreTri.optimistic_evaluation, 0.55),"%")
-    print()
+    print("\nTaux de mauvaise classification :", electreTri.compare_classification(product, profiles, affectation_type, _lambda),"%")
+    print("_"*100,"\n")
+    
+def execution_decision_tree(product_path, weight_path):
+    product_list = parseCSV.get_product_and_features(product_path, weight_path)
+    print("--- Classement des produits avec un arbre de décision ---")
+    arbrePourClassement60.construst_and_print_decision_tree(product_list)
+    print("_"*100,"\n")
 
-    print("   PESSIMISTE : ")
-    for cle,valeur in electreTri.pessimistic_evaluation(list_product_electre, list_profiles, 0.55):
-        print(cle, ": categorie C", valeur)
+def menu():
+    step=""
+    is_next_step_ok=False
+    while is_next_step_ok != True:
+        
+        print("\n--------- MENU PRINCIPAL ---------")
+        print("--- Analyse des classements de produits : Le cas du magazine 60 millions de consommateurs ---")
+        print()
+        print("Les analyses des produits suivants sont disponibles :")
+        print(" 1) les couche-culottes : Taper 1")
+        print(" 2) les robots de cuisine : Taper 2")
+        print("\n Quitter :  Taper 'stop'")
+        
+        user_input = input("Quels produits voulez-vous analyser ? Taper 1 ou 2 : ")
+        if user_input == "1":
+            is_next_step_ok=True
+            product=NAPPIES_PATH
+            weight=NAPPIES_WEIGHT_PATH
+            profiles=NAPPIES_PROFILES_PATH
+        elif user_input == "2":
+            is_next_step_ok=True
+            product=ROBOTS_PATH
+            weight=ROBOTS_WEIGHT_PATH
+            profiles=ROBOTS_PROFILES_PATH
+        elif user_input == "stop":
+            step="stop"
+            is_next_step_ok=True
+        else :
+            print("Erreur. Reformuler la requête.")
+    return(product, weight, profiles, step)
 
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_product_electre, list_profiles, electreTri.pessimistic_evaluation, 0.55),"%")
-    print()
-    print()
+def main():
+    (product, weight, profiles, step) = menu()
+        
+    print("_"*100,"\n")
+    while step != "stop":
+        print("Choix d'analyse : ")
+        print("   1) Test de validité par programmation linéaire")
+        print("   2) Classification avec la méthode ELECTRE TRI")
+        print("   3) Classement avec un arbre de décision")
+        print("\nRetour au choix des produits :  Taper 'retour'")
+        print("Quitter :  Taper 'stop'")
+        user_input = input("Quelle analyse voulez-vous effectuer ? Taper 1,2 ou une commande de navigation ci-dessus : ")
+        print("_"*100,"\n")
+        if user_input == "1":
+            execution_PL(product, weight)
+        elif user_input == "2":
+            execution_electre(product, weight, profiles)
+        elif user_input == "3":
+            execution_decision_tree(product, weight)
+        elif user_input == "retour":
+            (product, weight, profiles, step) = menu()
+        elif user_input == "stop":
+            step = "stop"
+        else :
+            print("Erreur. Reformuler la requête.")
+    print(" --------- END --------- ")
+    print("_"*100,"\n")
 
-    print("QUESTION 6 - ELECTRE TRI - LAMBDA = 0.75")
-    print("   OPTIMISTE : ")
-    for cle,valeur in electreTri.optimistic_evaluation(list_product_electre, list_profiles,0.75):
-        print(cle, ": categorie C", valeur)
-
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_product_electre, list_profiles, electreTri.optimistic_evaluation, 0.75),"%")
-    print()
-
-    print("   PESSIMISTE : ")
-    for cle,valeur in electreTri.pessimistic_evaluation(list_product_electre, list_profiles, 0.75):
-        print(cle,": categorie C",valeur)
-
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_product_electre, list_profiles, electreTri.pessimistic_evaluation, 0.75),"%")
-
-    print()
-    print()
-    print()
-    # QUESTION 9 - ELECTRE TRI CUISINES
-    list_cuisine_electre = parseCSV.get_product_and_features_notations(pathCuisine, pathPoidsCuisine)
-    list_profiles_cuisines = parseCSV.get_profiles(pathProfilesCuisines,pathPoidsCuisine)
-
-    print("QUESTION 9 - ELECTRE TRI - LAMBDA = 0.55")
-    print("   OPTIMISTE : ")
-    for cle,valeur in electreTri.optimistic_evaluation(list_cuisine_electre, list_profiles_cuisines,0.55):
-        print(cle, ": categorie C", valeur)
-
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_cuisine_electre, list_profiles_cuisines, electreTri.optimistic_evaluation, 0.55),"%")
-    print()
-
-    print("   PESSIMISTE : ")
-    for cle,valeur in electreTri.pessimistic_evaluation(list_cuisine_electre, list_profiles_cuisines, 0.55):
-        print(cle, ": categorie C", valeur)
-
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_cuisine_electre, list_profiles_cuisines, electreTri.pessimistic_evaluation, 0.55),"%")
-    print()
-    print()
-
-    print("QUESTION 9 - ELECTRE TRI - LAMBDA = 0.75")
-    print("   OPTIMISTE : ")
-    for cle,valeur in electreTri.optimistic_evaluation(list_cuisine_electre, list_profiles_cuisines,0.75):
-        print(cle, ": categorie C", valeur)
-
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_cuisine_electre, list_profiles_cuisines, electreTri.optimistic_evaluation, 0.75),"%")
-    print()
-
-    print("   PESSIMISTE : ")
-    for cle,valeur in electreTri.pessimistic_evaluation(list_cuisine_electre, list_profiles_cuisines, 0.75):
-        print(cle,": categorie C",valeur)
-
-    print("Taux de mauvaise classification :",electreTri.compare_classification(list_cuisine_electre, list_profiles_cuisines, electreTri.pessimistic_evaluation, 0.75),"%")
-
-
-def main(list_product):
-    entree_valide = ""
-    while entree_valide != "stop":
-        saisie = input("tapez 'pl' ou 'electre' pour accéder aux fonctions sous jacentes ou stop pour quitter le programme: ")
-        if saisie == "pl":
-            execution_PL(list_product)
-        if saisie == "electre":
-            execution_electre()
-        if saisie == "stop":
-            entree_valide = "stop"
-
-
-main(list_product)
-
-
-
-
-
+main()

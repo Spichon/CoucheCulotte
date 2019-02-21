@@ -2,7 +2,6 @@ class Product:
 
 	id=0
 
-
 	def __init__(self, name, categorie=0, score=0, classement=0):
 		Product.id += 1
 		self.name = name

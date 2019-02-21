@@ -25,50 +25,46 @@ def out_ranking(product1, product2, _lambda):
         return 1 # retourne 1 si le product1 surclasse le product2
     return 0
 
-# opstimistic_evaluation : méthode d'affectation optimiste qui assigne à chaque produit une catégorie
-    # un lambda par défaut est mis à 0.5
-def optimistic_evaluation(list_products, list_profiles, _lambda):
+# affectation : méthode d'affectation optimiste/pessimiste qui assigne à chaque produit une catégorie
+def affectation(list_products, list_profiles, affectation_type, _lambda):
     result={}
     # Pour chaque produit
     for product in list_products:
-        # Pour chaque profil, qui sont les produits bornant les catégories
-        for profile in list_profiles:
-            # Si ce profil surclasse le produit mais le produit ne surclasse pas le profil
-            if (out_ranking(profile,product,_lambda) and not out_ranking(product,profile,_lambda)):
-                # La catégorie du produit est donc celle dont le profil est la borne supérieure
-                result[product] = list_profiles.index(profile)
-                break
-    return sorted(result.items(), key=lambda t: t[1], reverse=True)
-
-# pessimistic_evaluation : méthode d'affectation pessimiste qui assigne à chaque produit une catégorie
-    # un lambda par défaut est mis à 0.5
-def pessimistic_evaluation(list_products, list_profiles, _lambda):
-    result={}
-    # Pour chaque produit
-    for product in list_products:
-        # Pour chaque profil, qui sont les produits bornant les catégories, dans l'ordre inverse
-        for profile in reversed(list_profiles):
-            # Si ce produit surclasse le profil
-            if (out_ranking(product,profile,_lambda)):
-                # La catégorie du produit est donc celle dont le profil est la borne inférieure
-                result[product] = len(list_profiles)-list_profiles[::-1].index(profile)
-                break
+        
+        # opstimistic_evaluation : méthode d'affectation optimiste qui assigne à chaque produit une catégorie
+        if (affectation_type == "optimistic"):
+            # Pour chaque profil, qui sont les produits bornant les catégories
+            for profile in list_profiles:
+                # Si ce profil surclasse le produit mais le produit ne surclasse pas le profil
+                if (out_ranking(profile,product,_lambda) and not out_ranking(product,profile,_lambda)):
+                    # La catégorie du produit est donc celle dont le profil est la borne supérieure
+                    result[product] = list_profiles.index(profile)
+                    break  
+                
+        # pessimistic_evaluation : méthode d'affectation pessimiste qui assigne à chaque produit une catégorie
+        else: 
+            # Pour chaque profil, qui sont les produits bornant les catégories, dans l'ordre inverse
+            for profile in reversed(list_profiles):
+                # Si ce produit surclasse le profil
+                if (out_ranking(product,profile,_lambda)):
+                    # La catégorie du produit est donc celle dont le profil est la borne inférieure
+                    result[product] = len(list_profiles)-list_profiles[::-1].index(profile)
+                    break
     return sorted(result.items(), key=lambda t: t[1], reverse=True)
 
 #  compare_classification : méthode calculant la matrice de confusion et retournant le taux de mauvaise classification
-def compare_classification(list_products,list_profiles, function_evaluation, _lambda=0.5):
+def compare_classification(list_products,list_profiles, affectation_type, _lambda):
     # matrice de confusion vide
     confusion=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
     # pour chaque produit
     for product in list_products:
         # on parcourt les résultats de l'affectation
-        for cle,valeur in function_evaluation(list_products, list_profiles,_lambda):
+        for cle,valeur in affectation(list_products, list_profiles, affectation_type, _lambda):
             # on récupère la catégorie du produit
             if cle==product:
                 value=valeur
         # on incrémente de 1 la case de la matrice de confusion telle que la colonne soit la catégorie prédite et la colonne est la catégorie du magazine
-        confusion[int(value)-1][int(product.classement)-1]+=1
-    print(confusion)
+        confusion[int(value)-1][int(product.categorie)-1]+=1
     result=0
     divisor=0
     # Calcul du taux de bonne classification
