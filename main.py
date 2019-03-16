@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from Services import parseCSV
 from Services import mathFunctions, electreTri, arbrePourClassement60
 from Model import Product
