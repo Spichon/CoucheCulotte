@@ -27,7 +27,13 @@ pip install -r requirements.txt
 ```
 
 Ensuite, ouvrez le projet dans votre IDE favori, et exécutez le fichier main.py.
-Des instructions vous seront demandées au fur et à mesure dans la console python permettant 
+Vous pouvez également éxécuter le code en vous positionnant à la racine du projet via votre terminal et éxécuter la commande
+
+```
+python main.py
+```
+
+Des instructions vous seront ensuite demandées au fur et à mesure dans la console python permettant 
 de tester les produits du magazine 60 millions de consommateurs 
 
 ## Packages
