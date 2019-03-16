@@ -1,3 +1,4 @@
+#GROUPE M2 ID APP : JAMMES PICHON PERRIN LEJEUNE
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 

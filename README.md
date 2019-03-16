@@ -1,3 +1,5 @@
+#GROUPE M2 ID APP : JAMMES PICHON PERRIN LEJEUNE
+
 # 60 millions de correcteurs
 
 Ce projet a pour objectif de critiquer le classement présenté par le magazine

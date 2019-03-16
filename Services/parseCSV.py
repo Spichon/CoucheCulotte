@@ -1,3 +1,4 @@
+#GROUPE M2 ID APP : JAMMES PICHON PERRIN LEJEUNE
 from Model import Product, Feature
 import csv
 

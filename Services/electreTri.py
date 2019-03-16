@@ -1,3 +1,5 @@
+#GROUPE M2 ID APP : JAMMES PICHON PERRIN LEJEUNE
+
 # partial_concordance : méthode générant l'indice de concordance partielle selon un critère donné entre deux produits
 def partial_concordance(product1, product2, criteria):
     # Product1 est au moins aussi bon que product2 si sa note est supérieure ou égale car on est dans un cas de maximisation

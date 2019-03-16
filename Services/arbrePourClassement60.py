@@ -1,3 +1,4 @@
+#GROUPE M2 ID APP : JAMMES PICHON PERRIN LEJEUNE
 from math import log
 from Services import parseCSV
 
